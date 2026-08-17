@@ -92,9 +92,11 @@ ok ".env written (DB creds + admin secret, not in git)"
 
 # ── 5. Database schema + admin seed ───────────────────────────────────────
 say "Importing schema into $DB_NAME…"
+awk '/^CREATE TABLE/{f=1} f' "$APP/db/schema.sql" > "$APP/.schema.tmp.sql"
 mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" --password="$DB_PASS" --force "$DB_NAME" \
-  < <(awk '/^CREATE TABLE/{f=1} f' "$APP/db/schema.sql") \
+  < "$APP/.schema.tmp.sql" \
   || warn "schema import had errors (--force used; tables may already exist)."
+rm -f "$APP/.schema.tmp.sql"
 ok "schema imported"
 
 say "Seeding admin user ($ADMIN_USERNAME)…"
