@@ -11,7 +11,7 @@ set -euo pipefail
 SITE_URL="https://himalayanreserve.kitetool.com"
 DOMAIN="himalayanreserve.kitetool.com"      # subdomain (created below if missing)
 APP_DIR="himalayanreserve"                  # folder under $HOME
-REPO_URL="https://github.com/rabeesubedi1997/HIMALAYANRESERVE.git"
+REPO_URL="git@github.com:rabeesubedi1997/HIMALAYANRESERVE.git"
 BRANCH="master"
 DB_HOST="localhost"
 DB_PORT="3306"
