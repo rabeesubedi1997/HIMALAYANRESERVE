@@ -10,7 +10,7 @@ set -euo pipefail
 # ── CONFIG ────────────────────────────────────────────────────────────────
 SITE_URL="https://himalayanreserve.kitetool.com"
 DOMAIN="himalayanreserve.kitetool.com"      # subdomain (created below if missing)
-APP_DIR="himalayanreserve"                  # folder under $HOME
+APP_DIR="himalayanreservenew"               # folder under $HOME
 REPO_URL="git@github.com:rabeesubedi1997/HIMALAYANRESERVE.git"
 BRANCH="master"
 DB_HOST="127.0.0.1"                       # 127.0.0.1 (not localhost) — mysql2/node IPv6 quirk
