@@ -1,6 +1,7 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { verifyToken, ADMIN_COOKIE } from "@/lib/auth";
+import { UPLOADS_DIR } from "@/lib/uploads";
 
 const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".svg"]);
 const VIDEO_EXT = new Set([".mp4", ".webm", ".mov"]);
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
   }
 
   const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-  const dir = path.join(process.cwd(), "public", "uploads");
+  const dir = UPLOADS_DIR;
   await mkdir(dir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer());

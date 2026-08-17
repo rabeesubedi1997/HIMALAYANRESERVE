@@ -12,6 +12,8 @@ import Packaging from "@/components/sections/Packaging";
 import Dubai from "@/components/sections/Dubai";
 import AllocationForm from "@/components/sections/AllocationForm";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   const seo = (settings.seo ?? seoDefault) as Record<string, unknown>;
@@ -20,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: String(seo.title ?? seoDefault.title),
     description: String(seo.description ?? seoDefault.description),
     keywords: String(seo.keywords ?? seoDefault.keywords),
-    metadataBase: new URL("https://himalayanreserve.coffee"),
+    metadataBase: new URL(process.env.SITE_URL ?? "https://himalayanreserve.coffee"),
     openGraph: {
       title: String(seo.ogTitle ?? seoDefault.ogTitle),
       description: String(seo.ogDescription ?? seoDefault.ogDescription),

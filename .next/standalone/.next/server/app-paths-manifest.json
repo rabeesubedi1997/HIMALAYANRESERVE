@@ -1,0 +1,20 @@
+{
+  "/(site)/page": "app/(site)/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/(protected)/media/page": "app/admin/(protected)/media/page.js",
+  "/admin/(protected)/page": "app/admin/(protected)/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/api/admin/login/route": "app/api/admin/login/route.js",
+  "/api/admin/logout/route": "app/api/admin/logout/route.js",
+  "/api/admin/media/route": "app/api/admin/media/route.js",
+  "/api/admin/settings/route": "app/api/admin/settings/route.js",
+  "/api/admin/upload/route": "app/api/admin/upload/route.js",
+  "/api/allocations/route": "app/api/allocations/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/uploads/[...name]/route": "app/uploads/[...name]/route.js"
+}

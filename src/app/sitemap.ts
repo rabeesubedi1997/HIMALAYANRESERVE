@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 
+const SITE_URL = process.env.SITE_URL ?? "https://himalayanreserve.coffee";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://himalayanreserve.coffee",
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,

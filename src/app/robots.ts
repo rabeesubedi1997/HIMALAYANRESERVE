@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+const SITE_URL = process.env.SITE_URL ?? "https://himalayanreserve.coffee";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
@@ -8,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://himalayanreserve.coffee/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

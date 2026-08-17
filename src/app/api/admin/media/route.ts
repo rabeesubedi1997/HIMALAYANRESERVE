@@ -1,10 +1,11 @@
 import { readdir, stat, unlink } from "node:fs/promises";
 import path from "node:path";
 import { verifyToken, ADMIN_COOKIE } from "@/lib/auth";
+import { UPLOADS_DIR } from "@/lib/uploads";
 
 const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".svg"]);
 const VIDEO_EXT = new Set([".mp4", ".webm", ".mov"]);
-const DIR = path.join(process.cwd(), "public", "uploads");
+const DIR = UPLOADS_DIR;
 
 function currentAdmin(request: Request) {
   const cookie = request.headers.get("cookie") ?? "";

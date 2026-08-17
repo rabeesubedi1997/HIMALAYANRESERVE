@@ -23,7 +23,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://himalayanreserve.coffee"),
+  metadataBase: new URL(process.env.SITE_URL ?? "https://himalayanreserve.coffee"),
   title: "Himalayan Reserve — The World's Highest Handcrafted Himalayan Coffee",
   description:
     "Ancestral single-estate coffee from 1,700m in Kaskikot, Nepal. Firewood-roasted, stone-ground, and served exclusively at At.mosphere Lounge, Level 122, Burj Khalifa, Dubai.",
