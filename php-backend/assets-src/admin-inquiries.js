@@ -6,7 +6,10 @@
   const msg = document.getElementById('inq-msg');
   const filters = document.getElementById('statusFilters');
   let items = [];
-  let status = '';
+  // Honor ?status=new etc. so links from the dashboard land pre-filtered.
+  const VALID_STATUSES = ['new', 'contacted', 'allocated', 'declined'];
+  const fromUrl = new URLSearchParams(location.search).get('status') ?? '';
+  let status = VALID_STATUSES.includes(fromUrl) ? fromUrl : '';
 
   const TYPE_LABELS = {
     private_collection: 'Private Collection',
@@ -92,20 +95,26 @@
     }
   }
 
-  filters.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-status]');
-    if (!btn) return;
-    status = btn.dataset.status;
+  function setActiveFilterButton(forStatus) {
     filters.querySelectorAll('button').forEach((f) => {
-      const active = f === btn;
+      const active = f.dataset.status === forStatus;
       f.classList.toggle('border-gold/80', active);
       f.classList.toggle('bg-gold/15', active);
       f.classList.toggle('text-gold', active);
       f.classList.toggle('border-white/25', !active);
       f.classList.toggle('text-[#cfcbc2]', !active);
     });
+  }
+
+  filters.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-status]');
+    if (!btn) return;
+    status = btn.dataset.status;
+    setActiveFilterButton(status);
     refresh();
   });
+
+  setActiveFilterButton(status);
 
   list.addEventListener('change', async (e) => {
     const sel = e.target.closest('[data-status-select]');

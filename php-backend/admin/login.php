@@ -5,7 +5,7 @@ require_once __DIR__ . '/../auth.php';
 
 hr_session_start();
 if (hr_current_admin()) {
-    header('Location: /admin/index.php');
+    header('Location: /admin/dashboard.php');
     exit;
 }
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_id'] = (int) $user['id'];
                 $_SESSION['admin_username'] = $user['username'];
                 $_SESSION['admin_role'] = $user['role'];
-                header('Location: /admin/index.php');
+                header('Location: /admin/dashboard.php');
                 exit;
             }
             hr_record_failed_login($ip, $username);
