@@ -29,6 +29,12 @@
 
   // ---- Auth forms ---------------------------------------------------------
 
+  async function fetchCaptcha() {
+    const { body } = await api('/api/chat_auth.php', { action: 'captcha' });
+    const el = document.getElementById('chatCaptchaQuestion');
+    if (el) el.textContent = (body.question || '?') + ' =';
+  }
+
   function renderAuthForm() {
     stopPolling();
     bodyEl.innerHTML = '';
@@ -42,11 +48,18 @@
       ${isRegister ? '<input id="chatName" type="text" placeholder="Full name" class="border border-white/20 bg-[#1c1c1c] px-3.5 py-2.5 text-sm text-paper outline-none focus:border-gold" />' : ''}
       <input id="chatEmail" type="email" placeholder="Email address" class="border border-white/20 bg-[#1c1c1c] px-3.5 py-2.5 text-sm text-paper outline-none focus:border-gold" />
       <input id="chatPassword" type="password" placeholder="Password" class="border border-white/20 bg-[#1c1c1c] px-3.5 py-2.5 text-sm text-paper outline-none focus:border-gold" />
+      ${isRegister ? `
+      <div class="flex items-center gap-2">
+        <span id="chatCaptchaQuestion" class="shrink-0 text-sm text-paper-dim">… =</span>
+        <input id="chatCaptchaAnswer" type="text" inputmode="numeric" placeholder="Your answer" class="w-full border border-white/20 bg-[#1c1c1c] px-3.5 py-2.5 text-sm text-paper outline-none focus:border-gold" />
+      </div>` : ''}
       <input id="chatWebsite" type="text" name="website" autocomplete="off" tabindex="-1" class="hidden" aria-hidden="true" />
       <button id="chatAuthSubmit" type="button" class="bg-gold px-4 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink hover:bg-white">${isRegister ? 'Create Account' : 'Sign In'}</button>
       <button id="chatAuthSwitch" type="button" class="text-xs text-paper-dim underline hover:text-gold">${isRegister ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}</button>
     `;
     bodyEl.appendChild(wrap);
+
+    if (isRegister) fetchCaptcha();
 
     document.getElementById('chatAuthSwitch').addEventListener('click', () => {
       mode = isRegister ? 'login' : 'register';
@@ -60,13 +73,24 @@
       const password = document.getElementById('chatPassword').value;
       const website = document.getElementById('chatWebsite').value;
       const payload = isRegister
-        ? { action: 'register', name: document.getElementById('chatName').value.trim(), email, password, website }
+        ? {
+            action: 'register',
+            name: document.getElementById('chatName').value.trim(),
+            email, password, website,
+            captchaAnswer: document.getElementById('chatCaptchaAnswer').value.trim(),
+          }
         : { action: 'login', email, password };
 
       const { ok, body } = await api('/api/chat_auth.php', payload);
       if (!ok) {
         errEl.textContent = body.error || 'Something went wrong.';
         errEl.classList.remove('hidden');
+        // A wrong/expired answer consumes the challenge server-side —
+        // fetch a fresh one so retrying isn't a dead end.
+        if (body.captchaFailed) {
+          document.getElementById('chatCaptchaAnswer').value = '';
+          fetchCaptcha();
+        }
         return;
       }
       customer = body.customer;

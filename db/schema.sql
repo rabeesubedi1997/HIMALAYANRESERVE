@@ -72,8 +72,16 @@ CREATE TABLE IF NOT EXISTS customers (
   name          VARCHAR(120) NOT NULL,
   email         VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  ip            VARCHAR(45)  NULL COMMENT 'signup IP, for per-IP rate limiting',
   created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
+
+-- CREATE TABLE IF NOT EXISTS above is a no-op on a server where customers
+-- already exists from an earlier deploy (before the `ip` column existed) —
+-- deploy.sh runs this whole file with --force, so on a fresh install this
+-- errors harmlessly ("duplicate column") and is ignored; on an existing
+-- install it's what actually adds the column.
+ALTER TABLE customers ADD COLUMN ip VARCHAR(45) NULL COMMENT 'signup IP, for per-IP rate limiting';
 
 -- Same brute-force lockout pattern as admin login_attempts, kept as its own
 -- table (rather than sharing one) so a customer-login attack can never
