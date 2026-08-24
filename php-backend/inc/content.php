@@ -100,6 +100,17 @@ function hr_content_defaults(): array
             'location' => "At.mosphere Restaurant & Lounge, Level 122, Burj Khalifa, Downtown Dubai, UAE",
             'mapUrl' => "https://www.google.com/maps/search/?api=1&query=At.mosphere+Lounge+Level+122+Burj+Khalifa+Dubai",
         ],
+        'faq' => [
+            'headline' => "Questions, Answered",
+            'subheadline' => "On authenticity, allocation, and access.",
+            'items' => [
+                ['question' => 'Why is Himalayan Reserve so expensive?', 'answer' => "Our yield is capped by nature, not by us — a single Kaskikot estate at 1,700m, hand-picked cherry by cherry, matured for 10 months, and stone-ground in small batches. The Wild Civet Reserve is rarer still: we don't farm it, we wait for free-roaming civets to select it. Scarcity, not markup, sets the price."],
+                ['question' => 'Can I buy Himalayan Reserve online or in stores?', 'answer' => "No. To protect the rarity of each harvest, Himalayan Reserve is never sold in retail or online. It is served exclusively at At.mosphere Lounge, Level 122, Burj Khalifa, Dubai, or allocated privately through our VIP Allocation desk."],
+                ['question' => 'How does Private Allocation work?', 'answer' => "Submit an inquiry through the Private Allocation form below with your collection interest. Our allocation desk personally reviews every request and replies with availability for the current batch — allocations are limited and offered in the order received."],
+                ['question' => 'Is the Wild Civet Reserve ethically sourced?', 'answer' => "Yes. Our civets are wild and free-roaming across the Kaskikot forest gardens — never caged, never farmed. We do not control or accelerate their selection; volume is entirely dictated by nature, which is precisely why supply is so limited."],
+                ['question' => 'Do you ship internationally?', 'answer' => "Private allocations are arranged individually with each collector, including international delivery where available. Share your location in the allocation form and our desk will confirm options for your region."],
+            ],
+        ],
         'press' => [
             "World's Most Expensive Coffee — \$2,200 per KG",
             "Nepal's Wild Civet Reserve Dethrones Black Ivory",
@@ -112,6 +123,7 @@ function hr_content_defaults(): array
             ['id' => 'craft', 'label' => 'Ancestral Craft'],
             ['id' => 'packaging', 'label' => 'Packaging'],
             ['id' => 'dubai', 'label' => 'Dubai'],
+            ['id' => 'faq', 'label' => 'FAQ'],
             ['id' => 'allocation', 'label' => 'Private Allocation'],
         ],
         'footer' => [

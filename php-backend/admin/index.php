@@ -15,6 +15,7 @@ $sectionMeta = [
     'craft' => ['title' => 'Ancestral Craft', 'icon' => '❂'],
     'packaging' => ['title' => 'Eco Packaging', 'icon' => '▣'],
     'dubai' => ['title' => 'Dubai Destination', 'icon' => '◈'],
+    'faq' => ['title' => 'FAQ', 'icon' => '?'],
     'press' => ['title' => 'Press Marquee', 'icon' => '≋'],
     'nav' => ['title' => 'Menu', 'icon' => '☰'],
     'footer' => ['title' => 'Footer & Contact', 'icon' => '❦'],

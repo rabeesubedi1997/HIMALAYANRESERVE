@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/content.php';
 
-const HR_SECTION_KEYS = ['seo', 'hero', 'stats', 'ancestral', 'civet', 'craft', 'packaging', 'dubai', 'press', 'nav', 'footer', 'media'];
+const HR_SECTION_KEYS = ['seo', 'hero', 'stats', 'ancestral', 'civet', 'craft', 'packaging', 'dubai', 'faq', 'press', 'nav', 'footer', 'media'];
 
 function hr_is_section_key(string $key): bool
 {

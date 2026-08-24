@@ -13,6 +13,7 @@ $civet = $s['civet'];
 $craft = $s['craft'];
 $packaging = $s['packaging'];
 $dubai = $s['dubai'];
+$faq = $s['faq'];
 $nav = $s['nav'];
 $footer = $s['footer'];
 $media = $s['media'];
@@ -379,6 +380,28 @@ $inquiryTypes = HR_INQUIRY_TYPES;
             <span class="font-display text-3xl font-medium text-gold">442m</span>
             <p class="mt-1 text-sm text-paper-dim">Level 122 — the world's highest lounge, where Himalayan Reserve is served.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section id="faq" class="relative border-t border-white/5 py-28 md:py-36">
+      <div class="mx-auto max-w-[900px] px-6 lg:px-10">
+        <header class="mb-14 flex flex-col items-center gap-4 text-center">
+          <span class="eyebrow text-gold">Frequently Asked</span>
+          <h2 class="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-paper md:text-5xl"><?= h($faq['headline']) ?></h2>
+          <p class="max-w-xl text-base leading-relaxed text-paper-dim"><?= h($faq['subheadline']) ?></p>
+        </header>
+        <div class="flex flex-col gap-3">
+          <?php foreach ($faq['items'] as $item): ?>
+            <details class="group border border-white/10 bg-ink-soft/40 px-6 py-5 open:border-gold/30">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-display text-lg text-paper marker:content-none">
+                <?= h($item['question']) ?>
+                <span aria-hidden="true" class="shrink-0 text-xl text-gold transition-transform duration-300 group-open:rotate-45">+</span>
+              </summary>
+              <p class="mt-4 text-sm leading-relaxed text-paper-dim"><?= h($item['answer']) ?></p>
+            </details>
+          <?php endforeach; ?>
         </div>
       </div>
     </section>

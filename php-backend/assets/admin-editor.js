@@ -98,6 +98,14 @@ const SCHEMAS = [
     { type: 'text', key: 'location', label: 'Location line' },
     { type: 'text', key: 'mapUrl', label: 'Google Maps URL' },
   ]},
+  { key: 'faq', title: 'FAQ', icon: '?', fields: [
+    { type: 'text', key: 'headline', label: 'Headline' },
+    { type: 'text', key: 'subheadline', label: 'Sub headline' },
+    { type: 'array', key: 'items', label: 'Questions', itemLabel: 'Question', fields: [
+      { type: 'text', key: 'question', label: 'Question' },
+      { type: 'textarea', key: 'answer', label: 'Answer' },
+    ]},
+  ]},
   { key: 'press', title: 'Press Marquee', icon: '≋', fields: [
     { type: 'array', key: 'press', label: 'Claims / headlines', itemLabel: 'Claim', shape: 'scalar', scalarType: 'string' },
   ]},
