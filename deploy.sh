@@ -94,6 +94,15 @@ fi
 [ -f "$APP/app.js" ] || fail "app.js missing — the code did not deploy correctly."
 [ -f "$APP/.next/standalone/server.js" ] || fail "prebuilt bundle missing (.next/standalone) — re-pull from git."
 ok "code ready (prebuilt bundle included — no build needed on the server)"
+if [ -f "$APP/.htaccess" ]; then
+  CONFIGURED_ROOT=$(grep -m1 'PassengerAppRoot' "$APP/.htaccess" | sed -E 's/.*PassengerAppRoot "([^"]+)".*/\1/')
+  if [ -n "$CONFIGURED_ROOT" ] && [ "$CONFIGURED_ROOT" != "$APP" ]; then
+    warn "cPanel's Node app root is set to $CONFIGURED_ROOT, but this deploy targets $APP."
+    warn "Passenger serves whatever is at $CONFIGURED_ROOT — this run's code/.env/admin seed"
+    warn "won't reach the live site until APP_DIR here matches, or the Application root in"
+    warn "cPanel > Setup Node.js App is changed to $APP_DIR."
+  fi
+fi
 
 # ── 4. .env ───────────────────────────────────────────────────────────────
 say "Writing .env (600)…"
@@ -125,10 +134,22 @@ else
   warn "skip schema import (no mysql client) — import db/schema.sql via phpMyAdmin."
 fi
 
-if [ -n "$NODE" ] && [ -f "$APP/.next/standalone/scripts/seed-admin.mjs" ]; then
+if [ -n "$NODE" ] && [ -f "$APP/scripts/seed-admin.mjs" ]; then
   say "Seeding admin user ($ADMIN_USERNAME)…"
+  NPM="$(command -v npm 2>/dev/null || true)"
+  [ -z "$NPM" ] && [ -x "$(dirname "$NODE")/npm" ] && NPM="$(dirname "$NODE")/npm"
   (
-    cd "$APP/.next/standalone"
+    cd "$APP"
+    # scripts/seed-admin.mjs needs mysql2 + bcryptjs as real installed packages.
+    # (.next/standalone bundles those into its compiled server chunks instead of
+    # leaving them as node_modules, so running the script from there — the old
+    # behavior — always failed with ERR_MODULE_NOT_FOUND and silently skipped seeding.)
+    if [ -n "$NPM" ]; then
+      "$NPM" install mysql2 bcryptjs --no-save --no-audit --no-fund >/dev/null 2>&1 \
+        || warn "npm install of mysql2/bcryptjs failed — admin seed will likely fail too."
+    else
+      warn "no npm found — admin seed will likely fail (needs mysql2 + bcryptjs installed)."
+    fi
     DB_HOST="$DB_HOST" DB_PORT="$DB_PORT" DB_USER="$DB_USER" DB_PASSWORD="$DB_PASS" \
     DB_NAME="$DB_NAME" ADMIN_USERNAME="$ADMIN_USERNAME" ADMIN_PASSWORD="$ADMIN_PASSWORD" \
     "$NODE" scripts/seed-admin.mjs
