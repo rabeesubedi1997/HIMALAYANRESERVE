@@ -451,7 +451,14 @@ function renderFieldCard(field, path, ctx, plain) {
   function renderFields() {
     fieldsEl.innerHTML = '';
     for (const f of schema.fields) {
-      fieldsEl.appendChild(renderFieldCard(f, [schema.key, ...f.key.split('.')], ctx, false));
+      // Stats/Press/Menu store their WHOLE section value as one array
+      // (settings['stats'] IS the list, not {stats: the list}) and their
+      // one field happens to share the section's key ('stats'/'press'/
+      // 'nav') to label it — so the path must be just [schema.key], not
+      // [schema.key, schema.key]. Every other section wraps its fields in
+      // an object, where the nested path is correct.
+      const path = f.key === schema.key ? [schema.key] : [schema.key, ...f.key.split('.')];
+      fieldsEl.appendChild(renderFieldCard(f, path, ctx, false));
     }
   }
 
