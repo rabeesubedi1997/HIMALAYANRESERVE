@@ -5,8 +5,11 @@
   if (!root) return;
   const panel = document.getElementById('chatPanel');
   const bodyEl = document.getElementById('chatBody');
-  const toggleBtn = document.getElementById('chatToggleBtn');
   const closeBtn = document.getElementById('chatCloseBtn');
+  const contactToggleBtn = document.getElementById('contactToggleBtn');
+  const contactToggleIcon = document.getElementById('contactToggleIcon');
+  const contactOptions = document.getElementById('contactOptions');
+  const chatOptionBtn = document.getElementById('chatOptionBtn');
 
   let customer = null;
   let pollTimer = null;
@@ -197,12 +200,30 @@
     pollTimer = null;
   }
 
-  // ---- Toggle open/close ----------------------------------------------------
+  // ---- Toggle: single button fans out to WhatsApp + Chat, chat opens the panel ---
 
   let initialized = false;
+  let optionsOpen = false;
+
+  function showOptions() {
+    optionsOpen = true;
+    contactOptions.classList.remove('hidden');
+    contactOptions.classList.add('flex');
+    contactToggleIcon.textContent = '✕';
+    contactToggleBtn.setAttribute('aria-expanded', 'true');
+  }
+  function hideOptions() {
+    optionsOpen = false;
+    contactOptions.classList.add('hidden');
+    contactOptions.classList.remove('flex');
+    contactToggleIcon.textContent = '💬';
+    contactToggleBtn.setAttribute('aria-expanded', 'false');
+  }
+
   async function openPanel() {
+    hideOptions();
+    contactToggleBtn.classList.add('hidden');
     panel.classList.remove('hidden');
-    toggleBtn.setAttribute('aria-expanded', 'true');
     if (!initialized) {
       initialized = true;
       const { ok, body } = await api('/api/chat_auth.php', { action: 'me' });
@@ -213,11 +234,17 @@
   }
   function closePanel() {
     panel.classList.add('hidden');
-    toggleBtn.setAttribute('aria-expanded', 'false');
+    contactToggleBtn.classList.remove('hidden');
   }
 
-  toggleBtn.addEventListener('click', () => {
-    panel.classList.contains('hidden') ? openPanel() : closePanel();
+  contactToggleBtn.addEventListener('click', () => {
+    optionsOpen ? hideOptions() : showOptions();
   });
+  chatOptionBtn.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
+
+  // Click outside the widget closes the fanned-out options.
+  document.addEventListener('click', (e) => {
+    if (optionsOpen && !root.contains(e.target)) hideOptions();
+  });
 })();
