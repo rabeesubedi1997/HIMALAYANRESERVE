@@ -1,0 +1,65 @@
+---
+import { nav } from "@/data/content";
+---
+
+<header id="site-header" class="fixed inset-x-0 top-0 z-[80] border-b border-transparent bg-transparent transition-all duration-500 [transition-timing-function:var(--ease-lux)]">
+  <div class="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between px-6 lg:px-10">
+    <a href="#home" class="font-display text-lg font-semibold tracking-[0.32em] text-paper">
+      HIMALAYAN <span class="gold-text gold-text--animated">RESERVE</span>
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-8 lg:flex">
+      {nav.map((item) => (
+        <a
+          href={`#${item.id}`}
+          data-nav-link={item.id}
+          class="group relative text-[0.72rem] font-medium uppercase tracking-[0.24em] text-paper-dim transition-colors duration-300 hover:text-paper"
+        >
+          {item.label}
+          <span
+            data-nav-underline
+            aria-hidden="true"
+            class="absolute -bottom-1.5 left-0 h-px w-0 bg-gold transition-all duration-500 [transition-timing-function:var(--ease-lux)] group-hover:w-full"
+          ></span>
+        </a>
+      ))}
+    </nav>
+
+    <a
+      href="#allocation"
+      class="hidden border border-gold/60 px-5 py-2.5 text-[0.7rem] font-medium uppercase tracking-[0.24em] text-gold transition-all duration-500 hover:bg-gold hover:text-ink lg:inline-block"
+    >
+      Private Allocation
+    </a>
+
+    <button
+      type="button"
+      id="mobile-menu-btn"
+      aria-label="Open menu"
+      aria-expanded="false"
+      class="flex h-11 w-11 flex-col items-center justify-center gap-1.5 lg:hidden"
+    >
+      <span class="h-px w-6 bg-paper transition-transform duration-300"></span>
+      <span class="h-px w-6 bg-paper transition-transform duration-300"></span>
+    </button>
+  </div>
+</header>
+
+<div
+  id="mobile-menu"
+  class="pointer-events-none fixed inset-0 z-[75] flex flex-col justify-center bg-ink/[0.98] px-8 opacity-0 transition-opacity duration-500 lg:hidden"
+>
+  <nav aria-label="Mobile" class="flex flex-col gap-7">
+    {nav.map((item) => (
+      <a href={`#${item.id}`} class="font-display text-4xl font-medium text-paper transition-all duration-500">
+        {item.label}
+      </a>
+    ))}
+    <a
+      href="#allocation"
+      class="mt-4 inline-flex w-fit border border-gold px-6 py-3 text-[0.75rem] font-medium uppercase tracking-[0.24em] text-gold"
+    >
+      Private Allocation →
+    </a>
+  </nav>
+</div>

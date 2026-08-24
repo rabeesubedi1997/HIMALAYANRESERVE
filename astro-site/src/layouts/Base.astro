@@ -1,0 +1,105 @@
+---
+import "@/styles/global.css";
+import { seo, brand } from "@/data/content";
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const { title = seo.title, description = seo.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const ldJson = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: brand.legalName,
+      url: "https://himalayanreserve.coffee",
+      email: brand.email,
+      slogan: brand.tagline,
+      location: [
+        { "@type": "Place", name: "Nepal Estate", address: brand.nepalEstate },
+        { "@type": "Place", name: "Dubai Partner", address: brand.dubaiPartner },
+      ],
+    },
+    {
+      "@type": "Product",
+      name: "Ancestral Single-Estate Edition",
+      description:
+        "100% handpicked, firewood-roasted and stone-ground coffee cultivated at 1,700m in Kaskikot, Nepal.",
+      url: "https://himalayanreserve.coffee",
+      offers: [
+        { "@type": "Offer", name: "100g Royal Gift Box", price: 149, priceCurrency: "AED" },
+        { "@type": "Offer", name: "250g Executive Master Box", price: 399, priceCurrency: "AED" },
+        { "@type": "Offer", name: "1kg Barista Reserve", price: 1200, priceCurrency: "AED" },
+      ],
+    },
+    {
+      "@type": "Product",
+      name: "Wild Civet Reserve",
+      description:
+        "The world's most expensive and rare Himalayan coffee, forest-sourced by wild free-roaming Himalayan civets at 1,700m.",
+      url: "https://himalayanreserve.coffee",
+      offers: [
+        { "@type": "Offer", name: "100g Crown Box", price: 999, priceCurrency: "AED" },
+        { "@type": "Offer", name: "250g Crown Box", price: 1999, priceCurrency: "AED" },
+        { "@type": "Offer", name: "1 Cup Brewed", price: 500, priceCurrency: "AED" },
+      ],
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" class="h-full antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={seo.keywords} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={seo.ogTitle} />
+    <meta property="og:description" content={seo.ogDescription} />
+    <meta property="og:image" content={new URL(seo.ogImage, Astro.site)} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Playfair+Display:wght@400..800&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(ldJson).replace(/</g, "\\u003c")} />
+  </head>
+  <body class="min-h-full flex flex-col bg-ink text-paper">
+    <div id="preloader" aria-hidden="true" class="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-ink transition-opacity duration-700">
+      <span class="font-display text-2xl font-semibold tracking-[0.42em] text-paper md:text-3xl">
+        HIMALAYAN <span class="gold-text">RESERVE</span>
+      </span>
+      <div class="h-px w-44 overflow-hidden bg-white/10">
+        <div class="h-full w-full origin-left scale-x-0 [animation:loader_1.6s_var(--ease-lux)_forwards]"></div>
+      </div>
+    </div>
+
+    <div id="scroll-progress" aria-hidden="true" class="fixed left-0 top-0 z-[95] h-0.5 w-full opacity-0 transition-opacity duration-500">
+      <div id="scroll-progress-bar" class="h-full w-full origin-left scale-x-0 bg-gold"></div>
+    </div>
+
+    <div aria-hidden="true" class="grain-overlay"></div>
+
+    <slot />
+
+    <script src="@/scripts/effects.ts"></script>
+  </body>
+</html>

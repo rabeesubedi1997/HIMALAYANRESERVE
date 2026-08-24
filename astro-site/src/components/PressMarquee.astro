@@ -1,0 +1,21 @@
+---
+import { pressClaims } from "@/data/content";
+---
+
+<div
+  class="group relative overflow-hidden border-y border-white/5 py-6"
+  style="mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent)"
+>
+  <div class="flex w-max animate-marquee group-hover:[animation-play-state:paused]" style="animation-duration: 46s">
+    {[false, true].map((hidden) => (
+      <div aria-hidden={hidden || undefined} class="flex shrink-0 items-center gap-10 pr-10">
+        {pressClaims.map((item) => (
+          <span class="flex items-center gap-10 whitespace-nowrap font-serif text-xl italic tracking-wide text-paper-dim md:text-2xl">
+            {item}
+            <span class="ml-10 inline-block h-1.5 w-1.5 rotate-45 bg-gold/60" aria-hidden="true"></span>
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Himalayan Reserve
 
-## Getting Started
+Astro (static) frontend + PHP admin/API backend for himalayanreserve.kitetool.com.
 
-First, run the development server:
+## Layout
+
+- `astro-site/` — marketing site source (Astro + Tailwind v4). Built output
+  lives in `astro-site/dist/` and is committed, so deployment never depends
+  on running `npm install` on the production server.
+- `php-backend/` — the actual live site: dynamic PHP homepage, admin CMS
+  (`admin/`), public API (`api/`), all reading/writing MySQL via
+  `inc/settings.php` + `config.php`.
+- `db/schema.sql` — MySQL schema.
+- `deploy.sh` — one-shot cPanel deployment script.
+
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd astro-site
+npm install
+npm run dev        # Astro dev server, for editing the marketing site itself
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To preview the full dynamic site (Astro assets + PHP), point a local PHP
+server at a merged copy of `astro-site/dist/` + `php-backend/`, with a
+`.env` set to your local MySQL credentials, e.g.:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+php -S localhost:8891
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rebuilding the Astro bundle
 
-## Learn More
+After changing anything in `astro-site/src/`:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd astro-site
+npm install
+npm run build       # writes dist/, including stable dist/assets/site.css|js
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Commit the updated `astro-site/dist/` along with your source changes —
+`deploy.sh` uses it as-is and skips building on the server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploying to cPanel
 
-## Deploy on Vercel
+On the server (see comments in `deploy.sh` for details):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git clone --branch master https://github.com/rabeesubedi1997/HIMALAYANRESERVE.git ~/himalayanreserve-src
+cd ~/himalayanreserve-src
+bash deploy.sh
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This merges the pre-built Astro assets + `php-backend/` into the live
+docroot, writes `.env`, imports `db/schema.sql`, and seeds the admin
+account. Make sure the domain's Document Root in cPanel points at the
+deployed folder (`~/himalayanreserve.kitetool.com`), not at
+`himalayanreserve-src/astro-site/dist`.

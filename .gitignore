@@ -1,43 +1,25 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Himalayan Reserve — Astro static frontend + PHP admin/API backend.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# dependencies (any depth — astro-site/node_modules etc.)
+node_modules/
 
-# testing
-/coverage
+# astro build cache (astro-site/dist IS committed on purpose — deploy.sh
+# ships it pre-built so the flaky Node/npm on cPanel is never required)
+astro-site/.astro/
 
-# next.js
-/.next/*
-!/.next/standalone/
-!/.next/standalone/**
-/out/
+# env files — real DB creds live only on the server, never in git
+.env*
 
-# production
-/build
+# user-uploaded media — content, not code
+php-backend/uploads/*
+!php-backend/uploads/.gitkeep
+
+# local scratch dirs used only during development on this machine
+/deploy-final/
+/local-test/
+/tmp/
+*.log
 
 # misc
 .DS_Store
 *.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts

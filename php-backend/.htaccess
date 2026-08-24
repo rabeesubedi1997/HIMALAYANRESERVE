@@ -1,0 +1,36 @@
+# Himalayan Reserve — static Astro site + PHP admin/API.
+# No Node.js / Passenger needed at all. This .htaccess merges into the
+# same docroot as the Astro `dist/` build output.
+
+# Never serve the env file or shared PHP includes directly.
+<FilesMatch "^(\.env|config\.php|auth\.php)$">
+  Require all denied
+</FilesMatch>
+
+# inc/ (settings + content defaults) and assets-src/ (unbuilt JS source)
+# are implementation details, never meant to be requested directly.
+<IfModule mod_authz_core.c>
+  <If "%{REQUEST_URI} =~ m#^/(inc|assets-src)/#">
+    Require all denied
+  </If>
+</IfModule>
+
+# Don't list directory contents.
+Options -Indexes
+
+# Long-lived caching for static build assets; PHP pages are never cached.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

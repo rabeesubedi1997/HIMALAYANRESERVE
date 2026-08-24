@@ -1,0 +1,45 @@
+---
+import { hero, media } from "@/data/content";
+---
+
+<section id="home" class="relative flex min-h-[100svh] flex-col justify-end overflow-hidden">
+  <video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={media.heroPoster}
+    aria-label="Kaskikot mist over the Annapurna range"
+    class="absolute inset-0 h-full w-full scale-105 object-cover [animation:kenburns_36s_ease-out_infinite_alternate]"
+  >
+    <source src={media.heroVideo} type="video/mp4" />
+  </video>
+
+  <div aria-hidden="true" class="absolute inset-0 bg-ink/40"></div>
+  <div aria-hidden="true" class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(11,11,11,0.5)_100%)]"></div>
+  <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-ink to-transparent"></div>
+
+  <div class="relative mx-auto w-full max-w-[1400px] px-6 pb-24 pt-40 lg:px-10">
+    <p class="reveal eyebrow mb-6 text-gold" data-reveal-delay="1">{hero.eyebrow}</p>
+    <h1 class="reveal max-w-4xl font-display text-5xl font-medium leading-[1.05] tracking-tight text-paper md:text-7xl lg:text-8xl" data-reveal-delay="2">
+      {hero.title}
+      <span class="mt-2 block italic text-transparent bg-gradient-to-r from-gold via-[#f3e5b0] to-gold bg-clip-text">
+        {hero.titleAccent}
+      </span>
+    </h1>
+    <p class="reveal mt-8 max-w-xl text-base leading-relaxed text-paper-dim md:text-lg" data-reveal-delay="3">
+      {hero.sub}
+    </p>
+    <div class="reveal mt-10 flex flex-wrap gap-4" data-reveal-delay="4">
+      <a href="#collections" class="group inline-flex items-center justify-center gap-3 bg-gold px-8 py-4 text-[0.8rem] font-medium uppercase tracking-[0.22em] text-ink transition-all duration-500 [transition-timing-function:var(--ease-lux)] hover:bg-paper hover:shadow-[0_0_40px_rgba(212,175,55,0.35)]">
+        <span>{hero.ctaPrimary}</span>
+        <span aria-hidden="true" class="transition-transform duration-500 group-hover:translate-x-1.5">→</span>
+      </a>
+      <a href="#dubai" class="group inline-flex items-center justify-center gap-3 border border-white/25 px-8 py-4 text-[0.8rem] font-medium uppercase tracking-[0.22em] text-paper transition-all duration-500 [transition-timing-function:var(--ease-lux)] hover:border-gold hover:text-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.12)]">
+        <span>{hero.ctaSecondary}</span>
+        <span aria-hidden="true" class="transition-transform duration-500 group-hover:translate-x-1.5">→</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+import { dubai, media } from "@/data/content";
+---
+
+<section id="dubai" class="relative overflow-hidden border-t border-white/5 py-28 md:py-36">
+  <div class="absolute inset-0">
+    <img src={media.burj} alt="Dubai skyline at dusk" loading="lazy" class="absolute inset-0 h-full w-full object-cover opacity-25" />
+    <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-b from-ink via-ink/80 to-ink"></div>
+  </div>
+
+  <div class="relative mx-auto grid max-w-[1400px] items-center gap-14 px-6 lg:grid-cols-2 lg:gap-20 lg:px-10">
+    <div class="flex flex-col gap-8">
+      <span class="eyebrow text-gold">The Dubai Exclusive Destination</span>
+      <h2 class="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-paper md:text-6xl">
+        {dubai.headline}
+      </h2>
+      <p class="max-w-xl text-lg leading-relaxed text-paper-dim">{dubai.subheadline}</p>
+      <p class="max-w-xl text-base leading-relaxed text-paper-dim">{dubai.text}</p>
+
+      <div class="flex flex-col gap-3 border border-white/10 bg-ink/60 p-6 backdrop-blur-sm">
+        <span class="eyebrow !text-[0.6rem] text-gold-dim">Location</span>
+        <p class="font-serif text-xl italic text-paper">{dubai.location}</p>
+        <a
+          href={dubai.mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex w-fit items-center gap-2 border-b border-gold/60 pb-1 text-[0.72rem] font-medium uppercase tracking-[0.24em] text-gold transition-colors duration-500 hover:border-gold hover:text-paper"
+        >
+          View on Map →
+        </a>
+      </div>
+
+      <a href="#allocation" class="group inline-flex w-fit items-center justify-center gap-3 border border-white/25 px-8 py-4 text-[0.8rem] font-medium uppercase tracking-[0.22em] text-paper transition-all duration-500 [transition-timing-function:var(--ease-lux)] hover:border-gold hover:text-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.12)]">
+        <span>Reserve Your Visit</span>
+        <span aria-hidden="true" class="transition-transform duration-500 group-hover:translate-x-1.5">→</span>
+      </a>
+    </div>
+
+    <div class="relative hidden aspect-[4/5] overflow-hidden lg:block">
+      <img src={media.burj} alt="Burj Khalifa, the world's tallest building" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+      <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent"></div>
+      <div class="absolute bottom-8 left-8 right-8 border border-white/10 bg-ink/70 p-6 backdrop-blur-md">
+        <span class="font-display text-3xl font-medium text-gold">442m</span>
+        <p class="mt-1 text-sm text-paper-dim">Level 122 — the world's highest lounge, where Himalayan Reserve is served.</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,78 @@
+---
+import { craft, media } from "@/data/content";
+
+const glyphs = ["M", "✋", "🔥", "◎"];
+const craftImages = [media.craft.terroir, media.craft.handpick, media.craft.firewood, media.craft.jato];
+const pillars = craft.pillars.map((p, i) => ({
+  ...p,
+  glyph: glyphs[i] ?? "◎",
+  image: craftImages[i % craftImages.length],
+}));
+
+const gallery = [
+  { image: media.craft.terroir, caption: "1,700m Terroir" },
+  { image: media.craft.handpick, caption: "Handpicked by Master Elders" },
+  { image: media.craft.firewood, caption: "Himalayan Sun Drying" },
+  { image: media.craft.jato, caption: "Firewood Roasting" },
+  { image: media.craft.jato, caption: "Stone-Ground on Jato" },
+  { image: media.craft.terroir, caption: "Stone-Ground Powder" },
+];
+
+const [firstWord, ...rest] = craft.headline.split(" ");
+---
+
+<section id="craft" class="relative border-t border-white/5 bg-ink-soft/30 py-28 md:py-36">
+  <div class="mx-auto max-w-[1400px] px-6 lg:px-10">
+    <header class="flex flex-col items-center gap-4 text-center">
+      <span class="eyebrow">The Ancestral Craft & Terroir</span>
+      <h2 class="font-display text-4xl font-semibold leading-[1.08] tracking-tight text-paper md:text-6xl">
+        {firstWord} <span class="gold-text">{rest.join(" ") || craft.headline}</span>
+      </h2>
+      <p class="max-w-2xl text-base leading-relaxed text-paper-dim md:text-lg">{craft.intro}</p>
+    </header>
+    <p class="mt-6 text-center font-serif text-xl italic text-gold">{craft.subheadline}</p>
+
+    <div class="mt-16 grid grid-cols-1 gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+      {pillars.map((p, i) => (
+        <article class="group relative flex flex-col overflow-hidden bg-ink">
+          <div class="relative h-56 overflow-hidden">
+            <img
+              src={p.image}
+              alt={p.title}
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover opacity-70 transition-all duration-[1600ms] [transition-timing-function:var(--ease-lux)] group-hover:scale-110 group-hover:opacity-90"
+            />
+            <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+            <span class="absolute left-4 top-4 font-serif text-3xl text-gold/80">{p.glyph}</span>
+          </div>
+          <div class="flex flex-1 flex-col gap-3 p-6">
+            <h3 class="font-display text-xl font-medium leading-snug text-paper">
+              {String(i + 1).padStart(2, "0")}. {p.title}
+            </h3>
+            <p class="text-sm leading-relaxed text-paper-dim">{p.text}</p>
+            <span aria-hidden="true" class="mt-auto h-px w-0 bg-gold transition-all duration-700 [transition-timing-function:var(--ease-lux)] group-hover:w-full"></span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <figure class="mt-20 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <blockquote class="flex flex-col gap-6">
+        <span class="eyebrow text-gold">10 Months of Himalayan Patience</span>
+        <p class="font-display text-4xl font-medium leading-tight text-paper md:text-5xl">
+          {craft.patience.big} <span class="italic text-paper-dim">{craft.patience.title}</span>
+        </p>
+        <p class="max-w-xl text-base leading-relaxed text-paper-dim">{craft.patience.text}</p>
+      </blockquote>
+      <div class="flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {gallery.map((g) => (
+          <figure class="group relative h-80 w-64 shrink-0 overflow-hidden">
+            <img src={g.image} alt={g.caption} loading="lazy" class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1800ms] [transition-timing-function:var(--ease-lux)] group-hover:scale-110" />
+            <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-ink/85 to-transparent"></div>
+            <figcaption class="absolute bottom-4 left-4 right-4 font-serif text-lg italic text-paper">{g.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </figure>
+  </div>
+</section>

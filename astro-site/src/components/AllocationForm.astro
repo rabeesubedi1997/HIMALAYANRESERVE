@@ -1,0 +1,106 @@
+---
+import { brand, inquiryTypes } from "@/data/content";
+
+const field =
+  "w-full border border-white/15 bg-ink/60 px-4 py-3.5 text-sm text-paper placeholder:text-paper-faint transition-colors duration-400 focus:border-gold focus:outline-none";
+---
+
+<section id="allocation" class="relative border-t border-white/5 bg-ink-soft/30 py-28 md:py-36">
+  <div aria-hidden="true" class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/25 to-transparent"></div>
+  <div class="mx-auto grid max-w-[1400px] gap-14 px-6 lg:grid-cols-[1fr_1.2fr] lg:gap-20 lg:px-10">
+    <div class="flex flex-col gap-8">
+      <header class="flex flex-col items-start gap-4 text-left">
+        <span class="eyebrow">VIP Private Allocation</span>
+        <h2 class="font-display text-4xl font-semibold leading-[1.08] tracking-tight text-paper md:text-6xl">
+          Request <span class="gold-text">Private Allocation</span>
+        </h2>
+        <p class="max-w-2xl text-base leading-relaxed text-paper-dim md:text-lg">
+          For Royal Families, VIP Private Collectors & Corporate Gifting.
+        </p>
+      </header>
+      <p class="max-w-md text-sm leading-relaxed text-paper-dim">
+        Due to extremely limited annual yields, private allocations of Himalayan Reserve (Batch 2026) are subject to availability.
+      </p>
+      <ul class="flex flex-col gap-3 text-sm text-paper-dim">
+        <li class="flex items-center gap-3"><span aria-hidden="true" class="h-1.5 w-1.5 rotate-45 bg-gold"></span> 3,100 boxes worldwide — Batch 2026</li>
+        <li class="flex items-center gap-3"><span aria-hidden="true" class="h-1.5 w-1.5 rotate-45 bg-gold"></span> Strictly allocated via VIP waitlist</li>
+        <li class="flex items-center gap-3"><span aria-hidden="true" class="h-1.5 w-1.5 rotate-45 bg-gold"></span> Sold nowhere else on Earth</li>
+      </ul>
+    </div>
+
+    <form
+      novalidate
+      data-allocation-form
+      data-whatsapp={brand.whatsapp}
+      data-email={brand.email}
+      class="flex flex-col gap-5 border border-white/10 bg-ink/70 p-6 backdrop-blur-sm md:p-10"
+    >
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div class="flex flex-col gap-2">
+          <label for="fullName" class="eyebrow !text-[0.6rem] text-gold-dim">Full Name *</label>
+          <input id="fullName" name="fullName" class={field} placeholder="Your full name" />
+          <span data-error-for="fullName" class="text-xs text-seal"></span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="email" class="eyebrow !text-[0.6rem] text-gold-dim">Email Address *</label>
+          <input id="email" name="email" type="email" class={field} placeholder="you@example.com" />
+          <span data-error-for="email" class="text-xs text-seal"></span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="phone" class="eyebrow !text-[0.6rem] text-gold-dim">Phone / WhatsApp *</label>
+          <input id="phone" name="phone" type="tel" class={field} placeholder="+977 98…" />
+          <span data-error-for="phone" class="text-xs text-seal"></span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="countryCity" class="eyebrow !text-[0.6rem] text-gold-dim">Country / City *</label>
+          <input id="countryCity" name="countryCity" class={field} placeholder="Country, City" />
+          <span data-error-for="countryCity" class="text-xs text-seal"></span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="inquiryType" class="eyebrow !text-[0.6rem] text-gold-dim">Inquiry Type *</label>
+        <select id="inquiryType" name="inquiryType" class={`${field} text-paper-faint`}>
+          <option value="" disabled selected>Select inquiry type…</option>
+          {inquiryTypes.map((t) => (
+            <option value={t.value} class="bg-ink text-paper">{t.label}</option>
+          ))}
+        </select>
+        <span data-error-for="inquiryType" class="text-xs text-seal"></span>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="message" class="eyebrow !text-[0.6rem] text-gold-dim">Message</label>
+        <textarea id="message" name="message" rows="5" class={field} placeholder="Tell us about your collection…"></textarea>
+      </div>
+
+      <div class="hidden" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <p role="alert" data-server-msg class="text-sm text-seal"></p>
+
+      <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+        <button type="submit" class="inline-flex flex-1 items-center justify-center bg-gold px-8 py-4 text-[0.75rem] font-medium uppercase tracking-[0.22em] text-ink transition-all duration-500 hover:bg-paper disabled:opacity-60">
+          Submit VIP Inquiry
+        </button>
+        <button type="button" data-channel="whatsapp" class="inline-flex flex-1 items-center justify-center border border-white/25 px-8 py-4 text-[0.75rem] font-medium uppercase tracking-[0.22em] text-paper transition-all duration-500 hover:border-gold hover:text-gold disabled:opacity-60">
+          Send via WhatsApp
+        </button>
+        <button type="button" data-channel="mailto" class="inline-flex flex-1 items-center justify-center border border-white/25 px-8 py-4 text-[0.75rem] font-medium uppercase tracking-[0.22em] text-paper transition-all duration-500 hover:border-gold hover:text-gold disabled:opacity-60">
+          Send via Email
+        </button>
+      </div>
+
+      <p data-done-msg class="hidden gap-4 border border-gold/40 bg-gold/[0.06] px-5 py-4 text-sm text-gold">
+        <svg viewBox="0 0 100 100" class="h-10 w-10 -rotate-6 [animation:stamp_0.55s_var(--ease-lux)_both]" aria-hidden="true">
+          <circle cx="50" cy="50" r="47" fill="none" stroke="#8E1F22" stroke-width="3" opacity="0.8"></circle>
+          <circle cx="50" cy="50" r="40" fill="#8E1F22" opacity="0.15"></circle>
+          <text x="50" y="60" text-anchor="middle" font-size="20" font-family="Playfair Display, serif" fill="#B94A4E">HR</text>
+        </svg>
+        Request received. Our allocation desk will contact you shortly.
+      </p>
+    </form>
+  </div>
+</section>
