@@ -51,5 +51,5 @@
   }
 
   refresh();
-  setInterval(refresh, 8000);
+  setInterval(refresh, 5000);
 })();

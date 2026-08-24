@@ -166,7 +166,7 @@
   function startPolling() {
     stopPolling();
     poll();
-    pollTimer = setInterval(poll, 4000);
+    pollTimer = setInterval(poll, 2000);
   }
   function stopPolling() {
     if (pollTimer) clearInterval(pollTimer);

@@ -102,5 +102,5 @@
   });
 
   poll();
-  setInterval(poll, 4000);
+  setInterval(poll, 2000);
 })();
