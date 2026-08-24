@@ -58,3 +58,34 @@ function hr_notify_new_allocation(array $data): void
         error_log('hr_notify_new_allocation failed: ' . $e->getMessage());
     }
 }
+
+/** Emails the admin the moment a customer sends a live-chat message. */
+function hr_notify_new_chat_message(string $customerName, string $customerEmail, string $body): void
+{
+    try {
+        $settings = hr_get_settings();
+        $to = trim((string) ($settings['footer']['email'] ?? ''));
+        if ($to === '' || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            return;
+        }
+
+        $siteUrl = rtrim(hr_env('SITE_URL', 'https://himalayanreserve.kitetool.com'), '/');
+        $host = parse_url($siteUrl, PHP_URL_HOST) ?: 'localhost';
+
+        $subject = 'New chat message — ' . $customerName;
+        $text = implode("\n", [
+            $customerName . ' (' . $customerEmail . ') sent a message on the live chat widget.',
+            '',
+            $body,
+            '',
+            'Reply: ' . $siteUrl . '/admin/chats.php',
+        ]);
+        $headers = "From: Himalayan Reserve Site <no-reply@$host>\r\n"
+            . 'Reply-To: ' . $customerEmail . "\r\n"
+            . "Content-Type: text/plain; charset=UTF-8";
+
+        @mail($to, $subject, $text, $headers);
+    } catch (Throwable $e) {
+        error_log('hr_notify_new_chat_message failed: ' . $e->getMessage());
+    }
+}

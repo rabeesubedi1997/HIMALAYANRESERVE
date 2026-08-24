@@ -62,3 +62,51 @@ CREATE TABLE IF NOT EXISTS site_settings (
   updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
                             ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
+
+-- ============================================================
+-- Live chat: visitor accounts + conversations with the admin
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS customers (
+  id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name          VARCHAR(120) NOT NULL,
+  email         VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Same brute-force lockout pattern as admin login_attempts, kept as its own
+-- table (rather than sharing one) so a customer-login attack can never
+-- interact with admin lockout accounting.
+CREATE TABLE IF NOT EXISTS customer_login_attempts (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip           VARCHAR(45)  NOT NULL,
+  email        VARCHAR(190) NOT NULL,
+  attempted_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_ip_time (ip, attempted_at)
+) ENGINE=InnoDB;
+
+-- One conversation per customer (kept simple — a single ongoing thread with
+-- the site, like the "request" thread in a ride-hailing app, not a
+-- multi-topic inbox).
+CREATE TABLE IF NOT EXISTS conversations (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_id       BIGINT UNSIGNED NOT NULL UNIQUE,
+  status            VARCHAR(20) NOT NULL DEFAULT 'open' COMMENT 'open|closed',
+  last_message_at   TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  customer_unread   INT UNSIGNED NOT NULL DEFAULT 0,
+  admin_unread      INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_conversations_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+  KEY idx_last_message (last_message_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS messages (
+  id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  conversation_id BIGINT UNSIGNED NOT NULL,
+  sender          VARCHAR(10) NOT NULL COMMENT 'customer|admin',
+  body            TEXT        NOT NULL,
+  created_at      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_messages_conversation FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+  KEY idx_conversation_time (conversation_id, created_at)
+) ENGINE=InnoDB;

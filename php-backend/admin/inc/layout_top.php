@@ -51,6 +51,7 @@ function hr_render_admin_nav(string $activeSection, array $hr_sections, string $
     <div class="flex flex-col gap-1 border-t border-white/15 p-3 pt-4">
       <span class="px-3.5 pb-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8f8a7f]">Leads</span>
       <?php $link('/admin/inquiries.php', 'inquiries', '✉', 'Inquiries'); ?>
+      <?php $link('/admin/chats.php', 'chats', '💬', 'Live Chat'); ?>
     </div>
     <div class="flex flex-col gap-1 border-t border-white/15 p-3 pt-4">
       <span class="px-3.5 pb-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8f8a7f]">Assets</span>

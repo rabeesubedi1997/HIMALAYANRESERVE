@@ -96,16 +96,30 @@ $inquiryTypes = HR_INQUIRY_TYPES;
   </div>
   <div aria-hidden="true" class="grain-overlay"></div>
 
-  <!-- ===== Floating WhatsApp chat ===== -->
+  <!-- ===== Floating WhatsApp (quick contact) ===== -->
   <a
     href="https://wa.me/<?= h(preg_replace('/\D/', '', $footer['whatsapp'])) ?>"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Chat with us on WhatsApp"
-    class="group fixed bottom-6 right-6 z-[85] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-ink shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-transform duration-300 hover:scale-110"
+    class="group fixed bottom-24 right-6 z-[85] flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-ink shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-transform duration-300 hover:scale-110"
   >
-    <svg viewBox="0 0 32 32" width="28" height="28" fill="#0b0b0b" aria-hidden="true"><path d="M16.004 2.667c-7.363 0-13.333 5.97-13.333 13.333 0 2.353.615 4.56 1.692 6.475L2.667 29.333l7.03-1.844a13.27 13.27 0 0 0 6.307 1.605h.006c7.362 0 13.333-5.97 13.333-13.333s-5.976-13.094-13.339-13.094Zm0 24.02h-.005a11.06 11.06 0 0 1-5.633-1.542l-.404-.24-4.174 1.095 1.114-4.07-.263-.418a11.03 11.03 0 0 1-1.692-5.912c0-6.107 4.968-11.075 11.08-11.075 2.96 0 5.742 1.154 7.834 3.248a11 11 0 0 1 3.24 7.838c-.002 6.107-4.97 11.076-11.097 11.076Zm6.076-8.293c-.333-.167-1.97-.972-2.276-1.083-.306-.111-.528-.166-.75.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.166-1.406-.518-2.678-1.65-.99-.884-1.66-1.976-1.854-2.309-.194-.334-.02-.514.146-.68.15-.15.334-.39.5-.584.167-.194.223-.333.334-.556.111-.222.056-.417-.028-.583-.083-.167-.75-1.807-1.028-2.475-.27-.65-.545-.562-.75-.573-.194-.01-.417-.012-.639-.012a1.23 1.23 0 0 0-.889.417c-.305.333-1.166 1.14-1.166 2.78s1.194 3.226 1.361 3.448c.166.222 2.35 3.585 5.694 5.028.795.343 1.415.548 1.898.7.797.253 1.523.218 2.096.132.64-.096 1.97-.805 2.248-1.583.278-.778.278-1.445.194-1.583-.083-.14-.305-.223-.639-.39Z"/></svg>
+    <svg viewBox="0 0 32 32" width="24" height="24" fill="#0b0b0b" aria-hidden="true"><path d="M16.004 2.667c-7.363 0-13.333 5.97-13.333 13.333 0 2.353.615 4.56 1.692 6.475L2.667 29.333l7.03-1.844a13.27 13.27 0 0 0 6.307 1.605h.006c7.362 0 13.333-5.97 13.333-13.333s-5.976-13.094-13.339-13.094Zm0 24.02h-.005a11.06 11.06 0 0 1-5.633-1.542l-.404-.24-4.174 1.095 1.114-4.07-.263-.418a11.03 11.03 0 0 1-1.692-5.912c0-6.107 4.968-11.075 11.08-11.075 2.96 0 5.742 1.154 7.834 3.248a11 11 0 0 1 3.24 7.838c-.002 6.107-4.97 11.076-11.097 11.076Zm6.076-8.293c-.333-.167-1.97-.972-2.276-1.083-.306-.111-.528-.166-.75.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.166-1.406-.518-2.678-1.65-.99-.884-1.66-1.976-1.854-2.309-.194-.334-.02-.514.146-.68.15-.15.334-.39.5-.584.167-.194.223-.333.334-.556.111-.222.056-.417-.028-.583-.083-.167-.75-1.807-1.028-2.475-.27-.65-.545-.562-.75-.573-.194-.01-.417-.012-.639-.012a1.23 1.23 0 0 0-.889.417c-.305.333-1.166 1.14-1.166 2.78s1.194 3.226 1.361 3.448c.166.222 2.35 3.585 5.694 5.028.795.343 1.415.548 1.898.7.797.253 1.523.218 2.096.132.64-.096 1.97-.805 2.248-1.583.278-.778.278-1.445.194-1.583-.083-.14-.305-.223-.639-.39Z"/></svg>
   </a>
+
+  <!-- ===== Live Chat widget ===== -->
+  <div id="chatWidgetRoot" class="fixed bottom-6 right-6 z-[86] flex flex-col items-end gap-3">
+    <div id="chatPanel" class="hidden w-[340px] max-w-[85vw] flex-col overflow-hidden border border-white/15 bg-[#131316] shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+      <div class="flex items-center justify-between border-b border-white/10 bg-ink px-4 py-3">
+        <span class="font-display text-sm tracking-[0.08em] text-paper">Chat with Himalayan Reserve</span>
+        <button type="button" id="chatCloseBtn" aria-label="Close chat" class="text-lg leading-none text-paper-dim hover:text-gold">✕</button>
+      </div>
+      <div id="chatBody" class="flex max-h-[65vh] min-h-[260px] flex-col"></div>
+    </div>
+    <button type="button" id="chatToggleBtn" aria-label="Open chat" class="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-ink shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-transform duration-300 hover:scale-110">
+      <span class="text-2xl leading-none">💬</span>
+    </button>
+  </div>
 
   <!-- ===== Navbar ===== -->
   <header id="site-header" class="fixed inset-x-0 top-0 z-[80] border-b border-transparent bg-transparent transition-all duration-500 [transition-timing-function:var(--ease-lux)]">
@@ -509,5 +523,6 @@ $inquiryTypes = HR_INQUIRY_TYPES;
   </footer>
 
   <script src="<?= htmlspecialchars(hr_asset_url('assets/site.js')) ?>"></script>
+  <script src="<?= htmlspecialchars(hr_asset_url('assets/chat-widget.js')) ?>"></script>
 </body>
 </html>
