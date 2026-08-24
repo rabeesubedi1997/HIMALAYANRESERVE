@@ -45,6 +45,23 @@ if ($method === 'GET') {
     hr_json(['media' => $files]);
 }
 
+/**
+ * Strips <script>, event-handler attributes, and javascript: URIs from an
+ * SVG. Browsers execute script inside an SVG opened directly (same origin
+ * as this site), so an unsanitized SVG upload is a stored-XSS vector —
+ * this is a pragmatic regex pass, not a full XML parse, but covers the
+ * realistic attack surface for a file that's meant to just be an icon/logo.
+ */
+function hr_sanitize_svg(string $svg): string
+{
+    $svg = preg_replace('#<script\b[^>]*>.*?</script>#is', '', $svg) ?? $svg;
+    $svg = preg_replace('#<script\b[^>]*/?>#is', '', $svg) ?? $svg;
+    $svg = preg_replace('/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg) ?? $svg;
+    $svg = preg_replace("/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg) ?? $svg;
+    $svg = preg_replace('/(href|xlink:href)\s*=\s*"\s*javascript:[^"]*"/i', '$1="#"', $svg) ?? $svg;
+    return $svg;
+}
+
 if ($method === 'POST') {
     if (empty($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         hr_json(['error' => 'No file uploaded, or upload error.'], 422);
@@ -58,10 +75,27 @@ if ($method === 'POST') {
     if (!in_array($ext, [...$imageExt, ...$videoExt], true)) {
         hr_json(['error' => 'Unsupported file type.'], 422);
     }
+
+    // Verify raster images are actually images (not, say, a renamed script)
+    // — skip avif, whose format support in getimagesize() varies by PHP
+    // build, so a false negative there shouldn't block a legitimate upload.
+    if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true) && @getimagesize($file['tmp_name']) === false) {
+        hr_json(['error' => 'File is not a valid image.'], 422);
+    }
+
     $safeBase = preg_replace('/[^a-zA-Z0-9_-]/', '-', pathinfo($file['name'], PATHINFO_FILENAME));
     $filename = time() . '-' . substr(bin2hex(random_bytes(4)), 0, 8) . '-' . $safeBase . '.' . $ext;
     $dest = $dir . '/' . $filename;
-    if (!move_uploaded_file($file['tmp_name'], $dest)) {
+
+    if ($ext === 'svg') {
+        $raw = file_get_contents($file['tmp_name']);
+        if ($raw === false || !str_contains($raw, '<svg')) {
+            hr_json(['error' => 'File is not a valid SVG.'], 422);
+        }
+        if (file_put_contents($dest, hr_sanitize_svg($raw)) === false) {
+            hr_json(['error' => 'Failed to save file.'], 500);
+        }
+    } elseif (!move_uploaded_file($file['tmp_name'], $dest)) {
         hr_json(['error' => 'Failed to save file.'], 500);
     }
     hr_json(['ok' => true, 'url' => '/uploads/' . $filename]);

@@ -16,6 +16,7 @@ $hr_sections = [
     ['key' => 'craft', 'title' => 'Ancestral Craft', 'icon' => '❂'],
     ['key' => 'packaging', 'title' => 'Eco Packaging', 'icon' => '▣'],
     ['key' => 'dubai', 'title' => 'Dubai Destination', 'icon' => '◈'],
+    ['key' => 'faq', 'title' => 'FAQ', 'icon' => '?'],
     ['key' => 'press', 'title' => 'Press Marquee', 'icon' => '≋'],
     ['key' => 'nav', 'title' => 'Menu', 'icon' => '☰'],
     ['key' => 'footer', 'title' => 'Footer & Contact', 'icon' => '❦'],
@@ -65,6 +66,9 @@ $hr_sections = [
             <?= htmlspecialchars($s['title']) ?>
           </a>
         <?php endforeach; ?>
+        <a href="/admin/account.php" class="shrink-0 whitespace-nowrap border px-3 py-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.12em] <?= $activeSection === 'account' ? 'border-gold/80 bg-gold/15 text-gold' : 'border-white/25 text-[#cfcbc2]' ?>">
+          Security
+        </a>
       </div>
 
       <div class="flex min-h-0 flex-1">
@@ -89,6 +93,16 @@ $hr_sections = [
             >
               <span aria-hidden="true" class="text-sm leading-none text-gold">🖼</span>
               Media Library
+            </a>
+          </div>
+          <div class="mt-4 flex flex-col gap-1 border-t border-white/15 p-3 pt-4">
+            <span class="px-3.5 pb-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8f8a7f]">Account</span>
+            <a
+              href="/admin/account.php"
+              class="flex items-center gap-3 border-l-2 px-3.5 py-2.5 text-left text-[0.72rem] font-semibold uppercase tracking-[0.12em] <?= $activeSection === 'account' ? 'border-gold bg-gold/[0.14] text-gold' : 'border-transparent text-[#cfcbc2] hover:bg-white/[0.06] hover:text-paper' ?>"
+            >
+              <span aria-hidden="true" class="text-sm leading-none text-gold">🔒</span>
+              Security
             </a>
           </div>
         </aside>

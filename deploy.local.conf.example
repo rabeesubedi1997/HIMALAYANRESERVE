@@ -1,0 +1,14 @@
+# Copy this to ~/deploy.local.conf on the SERVER (never commit the real
+# file — it's gitignored) and fill in real values:
+#
+#   cp deploy.local.conf.example ~/deploy.local.conf   # or just paste the heredoc from deploy.sh's error message
+#   chmod 600 ~/deploy.local.conf
+#
+# deploy.sh sources this for two secrets that must never live in git:
+#   DB_PASS         — the MySQL password for the DB user in deploy.sh's DB_USER/DB_NAME.
+#   ADMIN_PASSWORD  — only used the very first time the admin account is seeded
+#                     (INSERT IGNORE — later deploys never overwrite a password
+#                     already changed via /admin/account.php).
+
+DB_PASS='replace-with-real-db-password'
+ADMIN_PASSWORD='replace-with-a-strong-first-login-password'

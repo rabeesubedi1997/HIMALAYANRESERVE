@@ -1,0 +1,10 @@
+# Defense in depth: media_api.php already only accepts whitelisted image/
+# video extensions and sanitizes filenames, but if that ever regresses this
+# stops PHP (or CGI/SSI) from ever being *executed* out of the uploads dir.
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<FilesMatch "\.(?i:php|phtml|php[0-9]|pht|phar|cgi|pl|py|sh|exe)$">
+  Require all denied
+</FilesMatch>
+Options -ExecCGI -Indexes

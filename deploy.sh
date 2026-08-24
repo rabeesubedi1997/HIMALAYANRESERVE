@@ -24,9 +24,17 @@ DB_HOST="127.0.0.1"
 DB_PORT="3306"
 DB_NAME="vertexen_himalayanreserve"
 DB_USER="vertexen_himalayanreserve"
-DB_PASS="qO5\$M5067mp9Hyih"                  # NOTE: \$ keeps the $ literal
 ADMIN_USERNAME="admin"
-ADMIN_PASSWORD="admin123"                    # change after first login!
+
+# DB_PASS and ADMIN_PASSWORD (used only the very first run, to seed the
+# admin account — see step 6) live in $HOME/deploy.local.conf instead of
+# here, so real credentials are never committed to git. One-time setup:
+#   cat > ~/deploy.local.conf <<'EOF'
+#   DB_PASS='...'
+#   ADMIN_PASSWORD='...'
+#   EOF
+#   chmod 600 ~/deploy.local.conf
+LOCAL_CONF="$HOME/deploy.local.conf"
 
 say()  { printf "\033[1;36m==>\033[0m %s\n" "$*"; }
 ok()   { printf "\033[1;32m[ok]\033[0m %s\n" "$*"; }
@@ -63,6 +71,19 @@ find_npm() {
 
 # ── 1. Tool checks ─────────────────────────────────────────────────────────
 say "Checking tools…"
+
+[ -f "$LOCAL_CONF" ] || fail "Missing $LOCAL_CONF. One-time setup, run this once on the server then rerun deploy.sh:
+  cat > $LOCAL_CONF <<'EOF'
+  DB_PASS='your-actual-db-password'
+  ADMIN_PASSWORD='a-strong-password-for-first-login'
+  EOF
+  chmod 600 $LOCAL_CONF"
+# shellcheck disable=SC1090
+source "$LOCAL_CONF"
+[ -n "${DB_PASS:-}" ] || fail "$LOCAL_CONF exists but doesn't set DB_PASS."
+[ -n "${ADMIN_PASSWORD:-}" ] || fail "$LOCAL_CONF exists but doesn't set ADMIN_PASSWORD."
+ok "$LOCAL_CONF loaded"
+
 # git is only needed if there's no source checkout yet and you're not using
 # your own extracted tarball at $SRC — don't hard-fail on it here.
 if command -v git >/dev/null 2>&1; then ok "git found"; else warn "git not found — fine if you extracted the source tarball into $SRC yourself."; fi
@@ -195,19 +216,21 @@ awk '/^CREATE TABLE/{f=1} f' "$SRC/db/schema.sql" > "$LIVE/.schema.tmp.sql"
 rm -f "$LIVE/.schema.tmp.sql"
 ok "schema imported"
 
-say "Seeding admin user ($ADMIN_USERNAME)…"
+say "Seeding admin user ($ADMIN_USERNAME) if not already present…"
+# INSERT-only (no ON DUPLICATE KEY password overwrite) — once the account
+# exists, later runs must never reset a password changed via /admin/account.php.
 HASH="$("$PHP" -r 'echo password_hash($argv[1], PASSWORD_BCRYPT);' "$ADMIN_PASSWORD")"
 "$MYSQL" -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" --password="$DB_PASS" "$DB_NAME" -e "
-  INSERT INTO users (username, password_hash, role) VALUES ('$ADMIN_USERNAME', '$HASH', 'admin')
-  ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash);
+  INSERT IGNORE INTO users (username, password_hash, role) VALUES ('$ADMIN_USERNAME', '$HASH', 'admin');
 " || warn "admin seed failed — see DEPLOY-README.txt in $LIVE for the manual SQL."
-ok "admin seeded"
+ok "admin ready (existing password left untouched if the account already existed)"
 
 # ── 7. Done ────────────────────────────────────────────────────────────────
 say "Deploy complete."
 echo
 echo "  Site:   $SITE_URL"
-echo "  Admin:  $SITE_URL/admin/   (login: $ADMIN_USERNAME / $ADMIN_PASSWORD — change it!)"
+echo "  Admin:  $SITE_URL/admin/   (login: $ADMIN_USERNAME / the ADMIN_PASSWORD from $LOCAL_CONF, only used on first-ever seed)"
+echo "          Once logged in, set a real password at $SITE_URL/admin/account.php — it won't be reset by future deploys."
 echo "  Code:   $LIVE   (plain Apache + PHP — no Node.js app needed to run it)"
 echo
 warn "In cPanel > Setup Node.js App, make sure there is NO app registered for"

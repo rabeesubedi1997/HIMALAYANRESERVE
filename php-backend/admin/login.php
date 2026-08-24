@@ -10,12 +10,15 @@ if (hr_current_admin()) {
 }
 
 $error = '';
+$ip = hr_client_ip();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
-    if ($username === '' || $password === '') {
+    if (hr_login_locked_out($ip)) {
+        $error = 'Too many failed attempts. Please try again in ' . HR_LOGIN_LOCKOUT_MINUTES . ' minutes.';
+    } elseif ($username === '' || $password === '') {
         $error = 'Please enter a username and password.';
     } else {
         try {
@@ -28,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ok = password_verify($password, $hash);
 
             if ($user && $ok) {
+                hr_clear_failed_logins($ip);
                 session_regenerate_id(true);
                 $_SESSION['admin_id'] = (int) $user['id'];
                 $_SESSION['admin_username'] = $user['username'];
@@ -35,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: /admin/index.php');
                 exit;
             }
+            hr_record_failed_login($ip, $username);
             $error = 'Invalid username or password.';
         } catch (Throwable $e) {
             error_log('admin login failed: ' . $e->getMessage());

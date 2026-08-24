@@ -6,6 +6,13 @@
 
 declare(strict_types=1);
 
+// Don't rely on the shared host's php.ini default for this — leaking a
+// stack trace (file paths, SQL, etc.) on an uncaught error is a real
+// information-disclosure risk. Errors still get logged, just not echoed.
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+error_reporting(E_ALL);
+
 function hr_load_env(string $path): void
 {
     if (!is_file($path)) {

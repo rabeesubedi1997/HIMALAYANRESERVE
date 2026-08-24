@@ -18,6 +18,15 @@ function hr_str(mixed $v): string
     return trim(is_string($v) ? $v : '');
 }
 
+// Honeypot: the form has a hidden "website" field real visitors never see or
+// fill; the client JS already skips submitting when it's filled, but bots
+// that POST straight to this endpoint skip the browser entirely, so the
+// check has to be enforced here too. Pretend success — telling a bot it
+// was rejected only teaches it to leave the field empty next time.
+if (hr_str($body['website'] ?? '') !== '') {
+    hr_json(['ok' => true, 'id' => 0], 201);
+}
+
 $fullName = hr_str($body['fullName'] ?? '');
 $email = strtolower(hr_str($body['email'] ?? ''));
 $phone = hr_str($body['phone'] ?? '');
@@ -55,6 +64,19 @@ $userAgent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255) ?: null;
 
 try {
     $pdo = hr_db();
+
+    // Per-IP rate limit — a handful of genuine inquiries per hour is normal,
+    // dozens is scripted spam. Checked before the duplicate check so a
+    // flood from one IP can't hide behind varying emails/phones.
+    if ($ip) {
+        $rate = $pdo->prepare(
+            'SELECT COUNT(*) AS n FROM allocations WHERE ip = ? AND created_at > (NOW() - INTERVAL 1 HOUR)'
+        );
+        $rate->execute([$ip]);
+        if ((int) ($rate->fetch()['n'] ?? 0) >= 8) {
+            hr_json(['error' => 'Too many requests. Please try again later.'], 429);
+        }
+    }
 
     $dup = $pdo->prepare(
         'SELECT id FROM allocations WHERE email = ? AND phone = ? AND created_at > (NOW() - INTERVAL 10 MINUTE) LIMIT 1'

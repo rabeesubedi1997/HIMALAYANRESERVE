@@ -2,6 +2,14 @@
 # No Node.js / Passenger needed at all. This .htaccess merges into the
 # same docroot as the Astro `dist/` build output.
 
+# Force HTTPS (cPanel/LiteSpeed terminates TLS before this, hence the
+# %{HTTPS} off check rather than a port check).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 # Never serve the env file or shared PHP includes directly.
 <FilesMatch "^(\.env|config\.php|auth\.php)$">
   Require all denied
@@ -30,7 +38,18 @@ Options -Indexes
 </IfModule>
 
 <IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Only sent once HTTPS is already in effect (the RewriteRule above forces
+  # it), so this never gets cached by a browser that hit the site over
+  # plain HTTP first.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+  # No inline-script/nonce plumbing exists yet, so this stays permissive on
+  # 'unsafe-inline' rather than risk silently breaking the JSON-LD blocks
+  # and the admin editor's inline settings bootstrap — it still blocks the
+  # things that matter most: loading scripts/frames from other origins and
+  # exfiltrating data to them.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
 </IfModule>

@@ -13,6 +13,10 @@ astro-site/.astro/
 # user-uploaded media — content, not code
 php-backend/uploads/*
 !php-backend/uploads/.gitkeep
+!php-backend/uploads/.htaccess
+
+# deploy secrets — never committed, see deploy.sh / deploy.local.conf.example
+deploy.local.conf
 
 # local scratch dirs used only during development on this machine
 /deploy-final/

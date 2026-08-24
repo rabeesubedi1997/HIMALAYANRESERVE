@@ -43,6 +43,16 @@ CREATE TABLE IF NOT EXISTS users (
   created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+-- Failed admin login attempts, for brute-force lockout (see auth.php).
+-- Rows older than the lockout window are pruned on every login attempt.
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip           VARCHAR(45)  NOT NULL,
+  username     VARCHAR(60)  NOT NULL,
+  attempted_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_ip_time (ip, attempted_at)
+) ENGINE=InnoDB;
+
 -- site_settings: one row per editable section ('seo', 'hero', 'stats',
 -- 'ancestral', 'civet', 'craft', 'packaging', 'dubai', 'press', 'nav',
 -- 'footer', 'media'). Value is a JSON document overriding content defaults.
