@@ -66,6 +66,9 @@ $hr_sections = [
             <?= htmlspecialchars($s['title']) ?>
           </a>
         <?php endforeach; ?>
+        <a href="/admin/inquiries.php" class="shrink-0 whitespace-nowrap border px-3 py-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.12em] <?= $activeSection === 'inquiries' ? 'border-gold/80 bg-gold/15 text-gold' : 'border-white/25 text-[#cfcbc2]' ?>">
+          Inquiries
+        </a>
         <a href="/admin/account.php" class="shrink-0 whitespace-nowrap border px-3 py-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.12em] <?= $activeSection === 'account' ? 'border-gold/80 bg-gold/15 text-gold' : 'border-white/25 text-[#cfcbc2]' ?>">
           Security
         </a>
@@ -85,6 +88,16 @@ $hr_sections = [
               </a>
             <?php endforeach; ?>
           </nav>
+          <div class="mt-4 flex flex-col gap-1 border-t border-white/15 p-3 pt-4">
+            <span class="px-3.5 pb-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8f8a7f]">Leads</span>
+            <a
+              href="/admin/inquiries.php"
+              class="flex items-center gap-3 border-l-2 px-3.5 py-2.5 text-left text-[0.72rem] font-semibold uppercase tracking-[0.12em] <?= $activeSection === 'inquiries' ? 'border-gold bg-gold/[0.14] text-gold' : 'border-transparent text-[#cfcbc2] hover:bg-white/[0.06] hover:text-paper' ?>"
+            >
+              <span aria-hidden="true" class="text-sm leading-none text-gold">✉</span>
+              Inquiries
+            </a>
+          </div>
           <div class="mt-4 flex flex-col gap-1 border-t border-white/15 p-3 pt-4">
             <span class="px-3.5 pb-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-[#8f8a7f]">Assets</span>
             <a

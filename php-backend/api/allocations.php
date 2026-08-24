@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../inc/notify.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     hr_json(['error' => 'Method not allowed.'], 405);
@@ -91,8 +92,17 @@ try {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([$fullName, $email, $phone, $countryCity, $inquiryType, $message ?: null, $channel, $ip, $userAgent]);
+    // Capture this immediately — hr_notify_new_allocation() below runs its
+    // own queries on the same connection, and lastInsertId() must not be
+    // read after anything else has touched it.
+    $newId = (int) $pdo->lastInsertId();
 
-    hr_json(['ok' => true, 'id' => (int) $pdo->lastInsertId()], 201);
+    hr_notify_new_allocation([
+        'fullName' => $fullName, 'email' => $email, 'phone' => $phone, 'countryCity' => $countryCity,
+        'inquiryType' => $inquiryType, 'message' => $message, 'channel' => $channel,
+    ]);
+
+    hr_json(['ok' => true, 'id' => $newId], 201);
 } catch (Throwable $e) {
     error_log('allocations POST failed: ' . $e->getMessage());
     hr_json(['error' => 'Unable to store inquiry. Please try again.'], 500);
