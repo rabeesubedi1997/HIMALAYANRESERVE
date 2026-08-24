@@ -44,4 +44,4 @@ require __DIR__ . '/inc/layout_top.php';
 <?php
 require __DIR__ . '/inc/layout_bottom.php';
 ?>
-<script src="/assets/admin-media.js"></script>
+<script src="<?= htmlspecialchars(hr_asset_url('assets/admin-media.js')) ?>"></script>

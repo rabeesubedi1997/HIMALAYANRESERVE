@@ -32,7 +32,7 @@ $hr_sections = [
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="<?= htmlspecialchars(hr_asset_url('assets/site.css')) ?>" />
   <style>
     :root { color-scheme: dark; }
     html, body { height: 100%; margin: 0; }

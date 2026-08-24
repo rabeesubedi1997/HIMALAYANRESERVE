@@ -76,3 +76,18 @@ function hr_uploads_dir(): string
 {
     return __DIR__ . '/uploads';
 }
+
+/**
+ * URL for a file under /assets, with a cache-busting ?v= query string based
+ * on the file's mtime. assets/site.css and site.js keep the same filename
+ * across every deploy (so deploy.sh can ship a pre-built dist/ without
+ * needing Node on the server) and .htaccess caches them for a year — without
+ * this, a browser that visited before a fix shipped would keep serving the
+ * old cached copy for up to a year after redeploying.
+ */
+function hr_asset_url(string $relativePath): string
+{
+    $file = __DIR__ . '/' . ltrim($relativePath, '/');
+    $version = is_file($file) ? filemtime($file) : time();
+    return '/' . ltrim($relativePath, '/') . '?v=' . $version;
+}

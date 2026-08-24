@@ -69,4 +69,4 @@ require __DIR__ . '/inc/layout_bottom.php';
   window.HR_ACTIVE_SECTION = <?= json_encode($activeSection) ?>;
   window.HR_INITIAL_SETTINGS = <?= json_encode($settings) ?>;
 </script>
-<script src="/assets/admin-editor.js"></script>
+<script src="<?= htmlspecialchars(hr_asset_url('assets/admin-editor.js')) ?>"></script>

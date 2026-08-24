@@ -80,14 +80,14 @@ $inquiryTypes = HR_INQUIRY_TYPES;
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Playfair+Display:wght@400..800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="<?= htmlspecialchars(hr_asset_url('assets/site.css')) ?>" />
 
   <script type="application/ld+json"><?= json_encode($ldJson) ?></script>
 </head>
 <body class="min-h-full flex flex-col bg-ink text-paper">
 
   <div id="preloader" aria-hidden="true" class="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-ink transition-opacity duration-700">
-    <span class="font-display text-2xl font-semibold tracking-[0.42em] text-paper md:text-3xl">HIMALAYAN <span class="gold-text">RESERVE</span></span>
+    <span class="max-w-[85vw] text-center font-display text-lg font-semibold tracking-[0.22em] text-paper sm:text-2xl sm:tracking-[0.42em] md:text-3xl">HIMALAYAN <span class="gold-text">RESERVE</span></span>
     <div class="h-px w-44 overflow-hidden bg-white/10"><div class="h-full w-full origin-left scale-x-0 [animation:loader_1.6s_var(--ease-lux)_forwards]"></div></div>
   </div>
   <div id="scroll-progress" aria-hidden="true" class="fixed left-0 top-0 z-[95] h-0.5 w-full opacity-0 transition-opacity duration-500">
@@ -474,6 +474,6 @@ $inquiryTypes = HR_INQUIRY_TYPES;
     </div>
   </footer>
 
-  <script src="/assets/site.js"></script>
+  <script src="<?= htmlspecialchars(hr_asset_url('assets/site.js')) ?>"></script>
 </body>
 </html>
